@@ -24,13 +24,13 @@
         </TableView >
     </center>
     <bottom>
-        <HBox BorderPane.alignment ="CENTER">
+        <HBox alignment ="CENTER">
             <Button id="1" fx:id="ok" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#edit" text="Изменить" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
                 <font>
                     <Font name="System Bold Italic" size="18.0" />
                 </font>
             </Button>
-            <Label fx:id ="sum" BorderPane.alignment ="CENTER" />
+            <Label alignment ="CENTER" fx:id ="sum" BorderPane.alignment ="CENTER" />
         </HBox>
     </bottom>
 </BorderPane>

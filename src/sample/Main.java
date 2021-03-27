@@ -21,8 +21,8 @@ public class Main extends Application {
         Controller controller = loader.getController(); // создаем контроллер
         controller.init(); // запускаем в контроллере метод init
 
-        primaryStage.setTitle("TableView"); // заголовок формы
-        primaryStage.setScene(new Scene(root, 310, 330)); // размеры формы и наша панель, в форму(окно)
+        primaryStage.setTitle("TableCell"); // заголовок формы
+        primaryStage.setScene(new Scene(root, 310, 350)); // размеры формы и наша панель, в форму(окно)
         primaryStage.show(); // показать форму
     }
 

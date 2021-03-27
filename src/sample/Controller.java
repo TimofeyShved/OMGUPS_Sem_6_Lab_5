@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 public class Controller {
 
+    static Stage dialogStage;
 
     // -------------------------------------------------------------------- переменные ---------------------------------------------
 
@@ -32,27 +35,35 @@ public class Controller {
     // ----------------------------------------------------------------------- инициализация ---------------------------------------
     public void init (ObservableList<Expense> expenseList){
         table.setItems(expenseList) ;
+
         // добавление строки в столбик (имя)
         nameColumn.setCellValueFactory(cellData ->
-                cellData.getValue().nameProperty()) ;
+                cellData.getValue().nameProperty());
 
         // добавление строки в столбик (цена)
         costColumn.setCellValueFactory(cellData ->
-                cellData.getValue().costProperty()) ;
+                cellData.getValue().costProperty());
 
+        table.setEditable(true);
         costColumn.setCellFactory(cellData ->
                 new FloatCell (expenseList)
         );
+
         // подсчёт затрат
-        float sumCost=0;
-        for (Expense e: expenseList){ // перебор затрат
-            sumCost += e.cost.getValue();
-        }
-        sum.setText("Итого: "+sumCost+" руб."); // вывод затрат
+        table.setOnMouseClicked(event -> itogoUpdate());
 
         // добавление строки в столбик (цена)
         categoryColumn.setCellValueFactory(cellData ->
                 cellData.getValue().categoryOfExpensesProperty()) ;
+    }
+
+    //--------------------------------------обновление результата! \(＾∀＾)/
+    private void itogoUpdate(){
+        FloatProperty sumCost= new SimpleFloatProperty(0f);
+            for (Expense e: expenseList){ // перебор затрат
+            sumCost.setValue(sumCost.getValue()+e.cost.getValue());
+        }
+        sum.setText(" Итого: "+sumCost.getValue()+" руб. "); // вывод затрат
     }
 
     // ----------------------------------------- пустая инициализация (если пользователь ничего не передал)
@@ -79,14 +90,15 @@ public class Controller {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation (getClass().getResource("editWin.fxml"));
         Pane page = loader.load();
-        Stage dialogStage = new Stage() ;
+        dialogStage = new Stage() ;
         dialogStage.initModality( Modality.WINDOW_MODAL);
+
         Scene scene = new Scene(page) ;
         dialogStage.setScene(scene);
 
         EditWinController editWinController = loader.getController();
         int editingIndex = table.getSelectionModel().getFocusedIndex();
         editWinController.init(expenseList, editingIndex) ;
-        dialogStage.showAndWait ( ) ;
+        dialogStage.showAndWait();
     }
 }

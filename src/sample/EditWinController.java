@@ -13,8 +13,10 @@ public class EditWinController {
     ObservableList<Expense> expenseList;
     int editingIndex ;
     @FXML TextField name;
-    @FXML TextField cost;
-    @FXML TextField category;
+    @FXML FloatField cost;
+    @FXML ChoiceBox<String> category;
+    @FXML Button ok;
+    @FXML Button no;
 
     public void init (ObservableList<Expense > expenseList, int editingIndex ) {
         this.expenseList = expenseList;
@@ -22,23 +24,25 @@ public class EditWinController {
         Expense expense = expenseList.get(editingIndex);
         name.setText(expense.getName());
         cost.setText((expense.getCost().getValue()).toString());
-        category.setText(expense.getСategoryOfExpenses());
-        name.getParent().setOnMouseExited(e -> exit()) ;
+
+        ObservableList<String> option =  // поля
+                FXCollections.observableArrayList(
+                        "Еда",
+                        "Хозяйство",
+                        "Личное"
+                );
+        category = new ChoiceBox<>(option);
+
+
+        category.setValue(expense.categoryOfExpensesProperty().getValue());
+        name.getParent().setOnMouseExited(e -> exit());
     }
 
     private void exit() {
         Expense expense = new Expense (
                 name.getText(),
                 Float.parseFloat(cost.getText()),
-                category.getText());
+                category.getValue().toString());
         expenseList.set(editingIndex, expense) ;
-    }
-
-    public void save(MouseEvent mouseEvent) {
-
-    }
-
-    public void cancel(MouseEvent mouseEvent) {
-
     }
 }

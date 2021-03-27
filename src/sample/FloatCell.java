@@ -28,7 +28,7 @@ public class FloatCell extends TableCell<Expense,Number> {
                 super.cancelEdit();
                 int index = expenseList.indexOf(expense) ;
                 float newCost = Float.parseFloat(number.getText()) ;
-                Expense newExpense = new Expense(expense.getName(), newCost, expense.categoryOfExpenses.toString()) ;
+                Expense newExpense = new Expense(expense.getName(), newCost, expense.categoryOfExpenses.getValue());
                 expenseList.set(index, newExpense) ;
                 setGraphic(null) ;
         }
