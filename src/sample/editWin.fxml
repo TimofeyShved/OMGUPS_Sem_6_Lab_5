@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.172" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditWinController">
+    <center>
+        <VBox>
+            <HBox>
+                <Label BorderPane.alignment ="CENTER" text="Название "/>
+                <TextField fx:id="name" />
+            </HBox>
+            <HBox>
+                <Label BorderPane.alignment ="CENTER" text="Цена "/>
+                <TextField fx:id="cost" />
+            </HBox>
+            <HBox>
+                <Label BorderPane.alignment ="CENTER" text="Категория расходов "/>
+                <TextField fx:id="category" />
+            </HBox>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox>
+        <Button id="1" fx:id="ok" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#save" text="Сохранить" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
+            <font>
+                <Font name="System Bold Italic" size="18.0" />
+            </font>
+        </Button>
+        <Button id="1" fx:id="no" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#cancel" text="Отмена" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
+            <font>
+                <Font name="System Bold Italic" size="18.0" />
+            </font>
+        </Button>
+        </HBox>
+    </bottom>
+</BorderPane>
