@@ -2,6 +2,7 @@ package sample;
 
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,10 +12,36 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import javafx.application.Application;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 
@@ -29,12 +56,13 @@ public class Controller {
     @FXML TableView<Expense> table;
     @FXML TableColumn<Expense, String> nameColumn;
     @FXML TableColumn<Expense, Number> costColumn;
-    @FXML TableColumn<Expense, String> categoryColumn;
+    @FXML TableColumn<Expense, CategoryOfExpenses> categoryColumn;
     @FXML Label sum;
 
     // ----------------------------------------------------------------------- инициализация ---------------------------------------
     public void init (ObservableList<Expense> expenseList){
         table.setItems(expenseList) ;
+        table.setEditable(true);
 
         // добавление строки в столбик (имя)
         nameColumn.setCellValueFactory(cellData ->
@@ -44,7 +72,6 @@ public class Controller {
         costColumn.setCellValueFactory(cellData ->
                 cellData.getValue().costProperty());
 
-        table.setEditable(true);
         costColumn.setCellFactory(cellData ->
                 new FloatCell (expenseList)
         );
@@ -53,8 +80,45 @@ public class Controller {
         table.setOnMouseClicked(event -> itogoUpdate());
 
         // добавление строки в столбик (цена)
+        /*
         categoryColumn.setCellValueFactory(cellData ->
-                cellData.getValue().categoryOfExpensesProperty()) ;
+                cellData.getValue().categoryOfExpensesProperty());
+
+         */
+
+        categoryColumn = new TableColumn<Expense, CategoryOfExpenses>("CategoryOfExpenses");
+
+        // ==== GENDER (COMBO BOX) ===
+
+        ObservableList<CategoryOfExpenses> categoryList = FXCollections.observableArrayList(//
+                CategoryOfExpenses.values());
+
+        categoryColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Expense, CategoryOfExpenses>, ObservableValue<CategoryOfExpenses>>() {
+
+            @Override
+            public ObservableValue<CategoryOfExpenses> call(TableColumn.CellDataFeatures<Expense, CategoryOfExpenses> param) {
+                Expense person = param.getValue();
+                // F,M
+                String genderCode = person.getGender();
+                CategoryOfExpenses gender = CategoryOfExpenses.getByCode(genderCode);
+                return new SimpleObjectProperty<CategoryOfExpenses>(gender);
+            }
+        });
+
+        categoryColumn.setCellFactory(ComboBoxTableCell.forTableColumn(categoryList));
+
+        categoryColumn.setOnEditCommit((TableColumn.CellEditEvent<Expense, CategoryOfExpenses> event) -> {
+            TablePosition<Expense, CategoryOfExpenses> pos = event.getTablePosition();
+
+            CategoryOfExpenses newGender = event.getNewValue();
+
+            int row = pos.getRow();
+            Expense person = event.getTableView().getItems().get(row);
+
+            person.setGender(newGender.getCode());
+        });
+
+        categoryColumn.setMinWidth(120);
     }
 
     //--------------------------------------обновление результата! \(＾∀＾)/
@@ -74,15 +138,15 @@ public class Controller {
 
     // ----------------------------------------- тестовая инициализация
     public void testInit() {
-        expenseList.add(new Expense ( "Хлеб", new Float(30), "Еда"));
-        expenseList.add ( new Expense ( "Вода", new Float(35 ), "Еда"));
-        expenseList.add ( new Expense ( "Проезд", new Float(30 ), "Личное"));
-        expenseList.add ( new Expense ( "Верёвка", new Float(150 ), "Хозяйство"));
-        expenseList.add ( new Expense ( "Книга", new Float(340 ), "Личное"));
-        expenseList.add ( new Expense ( "Мыло", new Float(120 ), "Хозяйство"));
-        expenseList.add ( new Expense ( "Масло", new Float(35 ), "Еда"));
-        expenseList.add ( new Expense ( "Сыр", new Float(220 ), "Еда"));
-        expenseList.add ( new Expense ( "Табурет", new Float(1500 ), "Хозяйство"));
+        expenseList.add(new Expense ( "Хлеб", new Float(30), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Вода", new Float(35 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Проезд", new Float(30 ), CategoryOfExpenses.MALE.getCode()));
+        expenseList.add ( new Expense ( "Верёвка", new Float(150 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Книга", new Float(340 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Мыло", new Float(120 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Масло", new Float(35 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Сыр", new Float(220 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add ( new Expense ( "Табурет", new Float(1500 ), CategoryOfExpenses.FEMALE.getCode()));
         //ObservableValue<Number> x; // данная строчка не имеет смысла, но может пригодится если переделать на возвращаемую функцию. Но у нас void =D
     }
 
