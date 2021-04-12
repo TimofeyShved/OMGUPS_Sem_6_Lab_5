@@ -102,17 +102,15 @@ public class Controller {
 
         //запись выбранного поля ComboBox
         categoryColumn.setOnEditCommit((TableColumn.CellEditEvent<Expense, CategoryOfExpenses> event) -> {
-            TablePosition<Expense, CategoryOfExpenses> pos = event.getTablePosition();
+            TablePosition<Expense, CategoryOfExpenses> pos = event.getTablePosition(); // где меняем
 
-            CategoryOfExpenses category = event.getNewValue();
+            CategoryOfExpenses newcategory = event.getNewValue(); // значение новой, выбранной категории
 
-            int row = pos.getRow();
-            Expense person = event.getTableView().getItems().get(row);
+            int row = pos.getRow(); // где меняем
+            Expense category = event.getTableView().getItems().get(row);
 
-            person.setСategoryOfExpenses(category.getCode());
+            category.setСategoryOfExpenses(newcategory.getCode()); // записываем новую категорию
         });
-
-        //categoryColumn.setMinWidth(120);
     }
 
     //--------------------------------------обновление результата! \(＾∀＾)/--------------------------------------------
@@ -146,18 +144,18 @@ public class Controller {
 
     // ------------------------------------------------- Изменения через кнопку ---------------------------------------------------------------
     public void edit(MouseEvent mouseEvent) throws Exception {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation (getClass().getResource("editWin.fxml"));
-        Pane page = loader.load();
-        dialogStage = new Stage() ;
-        dialogStage.initModality( Modality.WINDOW_MODAL);
+        FXMLLoader loader = new FXMLLoader(); // создание формы
+        loader.setLocation (getClass().getResource("editWin.fxml")); // её разлиновка в xml
+        Pane page = loader.load(); // создание панели
+        dialogStage = new Stage();
+        dialogStage.initModality( Modality.WINDOW_MODAL); // блокировка предыдущей формы, при открытии новой
 
-        Scene scene = new Scene(page) ;
+        Scene scene = new Scene(page) ; // создание сцены
         dialogStage.setScene(scene);
 
-        EditWinController editWinController = loader.getController();
+        EditWinController editWinController = loader.getController(); // контроллер
         int editingIndex = table.getSelectionModel().getFocusedIndex();
-        editWinController.init(expenseList, editingIndex) ;
+        editWinController.init(expenseList, editingIndex); // отправка данных этой формы, на новую
         dialogStage.showAndWait();
     }
 }

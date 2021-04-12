@@ -49,6 +49,6 @@ public class Expense {
     public Expense ( String name , Float cost, String categoryOfExpenses) {
         this.name = new SimpleStringProperty(name); // добавить имя в класс
         this.cost = new SimpleFloatProperty(cost); // добавить цену в класс
-        this.categoryOfExpenses = new SimpleStringProperty(categoryOfExpenses); // добавить цену в класс
+        this.categoryOfExpenses = new SimpleStringProperty(categoryOfExpenses); // добавить category в класс
     }
 }

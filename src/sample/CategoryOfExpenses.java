@@ -31,6 +31,15 @@ public enum CategoryOfExpenses {
         return null;
     }
 
+    public static CategoryOfExpenses getByName(String nameCode) { // возвращает категорию по названию
+        for (CategoryOfExpenses g : CategoryOfExpenses.values()) {
+            if (g.text.equals(nameCode)) {
+                return g;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return this.text;
