@@ -22,7 +22,7 @@
             </HBox>
             <HBox>
                 <Label BorderPane.alignment ="CENTER" text="Категория расходов "/>
-                <ChoiceBox fx:id="category"/>
+                <ComboBox fx:id="category"/>
             </HBox>
         </VBox>
     </center>

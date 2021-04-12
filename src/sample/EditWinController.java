@@ -14,7 +14,7 @@ public class EditWinController {
     int editingIndex ;
     @FXML TextField name;
     @FXML FloatField cost;
-    @FXML ChoiceBox<String> category;
+    @FXML ComboBox<String> category;
     @FXML Button ok;
     @FXML Button no;
 
@@ -25,13 +25,9 @@ public class EditWinController {
         name.setText(expense.getName());
         cost.setText((expense.getCost().getValue()).toString());
 
-        ObservableList<String> option =  // поля
-                FXCollections.observableArrayList(
-                        "Еда",
-                        "Хозяйство",
-                        "Личное"
-                );
-        category = new ChoiceBox<>(option);
+        ObservableList<CategoryOfExpenses> categoryList = FXCollections.observableArrayList( // лист с категориями (enum)
+                CategoryOfExpenses.values());
+        //category = new ComboBox<>(option);
 
 
         category.setValue(expense.categoryOfExpensesProperty().getValue());

@@ -79,49 +79,43 @@ public class Controller {
         // подсчёт затрат
         table.setOnMouseClicked(event -> itogoUpdate());
 
-        // добавление строки в столбик (цена)
-        /*
-        categoryColumn.setCellValueFactory(cellData ->
-                cellData.getValue().categoryOfExpensesProperty());
+        // ================================================================== Category Of Expenses (COMBO BOX)
 
-         */
-
-        categoryColumn = new TableColumn<Expense, CategoryOfExpenses>("CategoryOfExpenses");
-
-        // ==== GENDER (COMBO BOX) ===
-
-        ObservableList<CategoryOfExpenses> categoryList = FXCollections.observableArrayList(//
+        ObservableList<CategoryOfExpenses> categoryList = FXCollections.observableArrayList( // лист с категориями (enum)
                 CategoryOfExpenses.values());
 
+        // добавление строки в столбик (Категория)
         categoryColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Expense, CategoryOfExpenses>, ObservableValue<CategoryOfExpenses>>() {
 
             @Override
             public ObservableValue<CategoryOfExpenses> call(TableColumn.CellDataFeatures<Expense, CategoryOfExpenses> param) {
-                Expense person = param.getValue();
-                // F,M
-                String genderCode = person.getGender();
-                CategoryOfExpenses gender = CategoryOfExpenses.getByCode(genderCode);
-                return new SimpleObjectProperty<CategoryOfExpenses>(gender);
+                Expense name = param.getValue(); // передаём параметры поля
+                // E,X,M
+                String categoryCode = name.getСategoryOfExpenses(); // вытаскиваем код категории (строчка)
+                CategoryOfExpenses category = CategoryOfExpenses.getByCode(categoryCode); // возвращает категорию по коду
+                return new SimpleObjectProperty<CategoryOfExpenses>(category);
             }
         });
 
+        // подгрузка ComboBox, для изменения данных
         categoryColumn.setCellFactory(ComboBoxTableCell.forTableColumn(categoryList));
 
+        //запись выбранного поля ComboBox
         categoryColumn.setOnEditCommit((TableColumn.CellEditEvent<Expense, CategoryOfExpenses> event) -> {
             TablePosition<Expense, CategoryOfExpenses> pos = event.getTablePosition();
 
-            CategoryOfExpenses newGender = event.getNewValue();
+            CategoryOfExpenses category = event.getNewValue();
 
             int row = pos.getRow();
             Expense person = event.getTableView().getItems().get(row);
 
-            person.setGender(newGender.getCode());
+            person.setСategoryOfExpenses(category.getCode());
         });
 
-        categoryColumn.setMinWidth(120);
+        //categoryColumn.setMinWidth(120);
     }
 
-    //--------------------------------------обновление результата! \(＾∀＾)/
+    //--------------------------------------обновление результата! \(＾∀＾)/--------------------------------------------
     private void itogoUpdate(){
         FloatProperty sumCost= new SimpleFloatProperty(0f);
             for (Expense e: expenseList){ // перебор затрат
@@ -130,26 +124,27 @@ public class Controller {
         sum.setText(" Итого: "+sumCost.getValue()+" руб. "); // вывод затрат
     }
 
-    // ----------------------------------------- пустая инициализация (если пользователь ничего не передал)
+    // ----------------------------------------- пустая инициализация (если пользователь ничего не передал)----------------------
     public void init() {
         this.testInit();
         this.init(expenseList);
     }
 
-    // ----------------------------------------- тестовая инициализация
+    // ----------------------------------------- тестовая инициализация---------------------------------------------------------------
     public void testInit() {
-        expenseList.add(new Expense ( "Хлеб", new Float(30), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Вода", new Float(35 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Проезд", new Float(30 ), CategoryOfExpenses.MALE.getCode()));
-        expenseList.add ( new Expense ( "Верёвка", new Float(150 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Книга", new Float(340 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Мыло", new Float(120 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Масло", new Float(35 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Сыр", new Float(220 ), CategoryOfExpenses.FEMALE.getCode()));
-        expenseList.add ( new Expense ( "Табурет", new Float(1500 ), CategoryOfExpenses.FEMALE.getCode()));
+        expenseList.add(new Expense ( "Хлеб", new Float(30), CategoryOfExpenses.EAT.getCode()));
+        expenseList.add ( new Expense ( "Вода", new Float(35 ), CategoryOfExpenses.EAT.getCode()));
+        expenseList.add ( new Expense ( "Проезд", new Float(30 ), CategoryOfExpenses.MAN.getCode()));
+        expenseList.add ( new Expense ( "Верёвка", new Float(150 ), CategoryOfExpenses.XOZ.getCode()));
+        expenseList.add ( new Expense ( "Книга", new Float(340 ), CategoryOfExpenses.MAN.getCode()));
+        expenseList.add ( new Expense ( "Мыло", new Float(120 ), CategoryOfExpenses.XOZ.getCode()));
+        expenseList.add ( new Expense ( "Масло", new Float(35 ), CategoryOfExpenses.EAT.getCode()));
+        expenseList.add ( new Expense ( "Сыр", new Float(220 ), CategoryOfExpenses.EAT.getCode()));
+        expenseList.add ( new Expense ( "Табурет", new Float(1500 ), CategoryOfExpenses.XOZ.getCode()));
         //ObservableValue<Number> x; // данная строчка не имеет смысла, но может пригодится если переделать на возвращаемую функцию. Но у нас void =D
     }
 
+    // ------------------------------------------------- Изменения через кнопку ---------------------------------------------------------------
     public void edit(MouseEvent mouseEvent) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation (getClass().getResource("editWin.fxml"));

@@ -51,32 +51,4 @@ public class Expense {
         this.cost = new SimpleFloatProperty(cost); // добавить цену в класс
         this.categoryOfExpenses = new SimpleStringProperty(categoryOfExpenses); // добавить цену в класс
     }
-
-    public String getFullName() {
-        return name.getValue();
-    }
-
-    public void setFullName(String fullName) {
-        this.name.setValue(fullName);
-    }
-
-    public String getGender() {
-        return categoryOfExpenses.getValue();
-    }
-
-    public void setGender(String gender) {
-        this.categoryOfExpenses.setValue(gender);
-    }
-
-    /*
-    public boolean isSingle() {
-        return single;
-    }
-
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
-
-     */
-
 }
